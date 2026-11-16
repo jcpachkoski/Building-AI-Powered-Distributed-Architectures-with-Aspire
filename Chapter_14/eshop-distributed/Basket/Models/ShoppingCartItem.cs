@@ -6,7 +6,7 @@ public class ShoppingCartItem
     public string Color { get; set; } = default!;
     public int ProductId { get; set; } = default!;
 
-    // will comes from Catalog module
+    // Will come from Catalog module
     public decimal Price { get; set; } = default!;
     public string ProductName { get; set; } = default!;
 }

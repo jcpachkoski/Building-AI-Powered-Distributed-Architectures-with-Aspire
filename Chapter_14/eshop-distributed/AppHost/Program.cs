@@ -29,7 +29,7 @@ var keycloak = builder
 
 if (builder.ExecutionContext.IsRunMode)
 {
-    // Data volumes don't work on ACA for Postgres so only add when running
+    // Data volumes don't work on Azur Container Apps (ACA) for Postgres so only add when running locally.
     postgres.WithDataVolume();
     rabbitmq.WithDataVolume();
     keycloak.WithDataVolume();

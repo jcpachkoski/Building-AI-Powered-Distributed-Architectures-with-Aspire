@@ -28,7 +28,7 @@ public class ProductAIService(
         };
 
         var resultPrompt = await chatClient.GetResponseAsync(chatHistory);
-        return resultPrompt.Message.Contents[0].ToString()!;        
+        return resultPrompt.Text;
     }
 
     public async Task<IEnumerable<Product>> SearchProductsAsync(string query)
@@ -38,7 +38,7 @@ public class ProductAIService(
             await InitEmbeddingsAsync();
         }
 
-        var queryEmbedding = await embeddingGenerator.GenerateEmbeddingVectorAsync(query);
+        var queryEmbedding = (await embeddingGenerator.GenerateAsync(query)).Vector;
 
         var vectorSearchOptions = new VectorSearchOptions
         {
@@ -81,7 +81,7 @@ public class ProductAIService(
                 Description = product.Description,
                 Price = product.Price,
                 ImageUrl = product.ImageUrl,
-                Vector = await embeddingGenerator.GenerateEmbeddingVectorAsync(productInfo)
+                Vector = (await embeddingGenerator.GenerateAsync(productInfo)).Vector
             };
 
             await productVectorCollection.UpsertAsync(productVector);
