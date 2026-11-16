@@ -7,7 +7,7 @@ public class ProductAIService(
     ProductDbContext dbContext,
     IChatClient chatClient,
     IEmbeddingGenerator<string, Embedding<float>> embeddingGenerator,
-    IVectorStoreRecordCollection<int, ProductVector> productVectorCollection)
+    VectorStoreCollection<int, ProductVector> productVectorCollection)
 {
     public async Task<string> SupportAsync(string query)
     {
@@ -40,17 +40,13 @@ public class ProductAIService(
 
         var queryEmbedding = await embeddingGenerator.GenerateEmbeddingVectorAsync(query);
 
-        var vectorSearchOptions = new VectorSearchOptions
-        {
-            Top = 1,
-            VectorPropertyName = "Vector"
-        };
+        var vectorSearchOptions = new VectorSearchOptions<ProductVector>();
 
         var results =
-            await productVectorCollection.VectorizedSearchAsync(queryEmbedding, vectorSearchOptions);
+            productVectorCollection.SearchAsync(queryEmbedding, top: 1, vectorSearchOptions);
 
         List<Product> products = [];
-        await foreach (var resultItem in results.Results)
+        await foreach (var resultItem in results)
         {
             products.Add(new Product
             {
@@ -67,7 +63,7 @@ public class ProductAIService(
 
     private async Task InitEmbeddingsAsync()
     {
-        await productVectorCollection.CreateCollectionIfNotExistsAsync();
+        await productVectorCollection.EnsureCollectionExistsAsync();
 
         var products = await dbContext.Products.ToListAsync();
         foreach (var product in products)

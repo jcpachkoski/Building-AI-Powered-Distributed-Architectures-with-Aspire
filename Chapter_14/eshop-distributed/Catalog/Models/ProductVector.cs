@@ -5,18 +5,18 @@ namespace Catalog.Models;
 
 public class ProductVector
 {
-    [VectorStoreRecordKey]
+    [VectorStoreKey]
     public int Id { get; set; }
-    [VectorStoreRecordData]
+    [VectorStoreData]
     public string Name { get; set; } = default!;
-    [VectorStoreRecordData]
+    [VectorStoreData]
     public string Description { get; set; } = default!;
-    [VectorStoreRecordData]
+    [VectorStoreData]
     public decimal Price { get; set; }
-    [VectorStoreRecordData]
+    [VectorStoreData]
     public string ImageUrl { get; set; } = default!;
 
     [NotMapped]
-    [VectorStoreRecordVector(384, DistanceFunction.CosineSimilarity)]
+    [VectorStoreVector(384, DistanceFunction = DistanceFunction.CosineSimilarity)]
     public ReadOnlyMemory<float> Vector { get; set; }
 }
