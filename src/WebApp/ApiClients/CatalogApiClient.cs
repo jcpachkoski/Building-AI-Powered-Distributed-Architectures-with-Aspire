@@ -24,7 +24,9 @@ public class CatalogApiClient(HttpClient httpClient)
 
     public async Task<List<Product>?> SearchProducts(string query, bool aiSearch)
     {
-        if (aiSearch)
+        if (String.IsNullOrWhiteSpace(query)) return [];
+
+        if (aiSearch && !String.IsNullOrWhiteSpace(query))
         {
             return await httpClient.GetFromJsonAsync<List<Product>>($"/products/aisearch/{query}");
         }
