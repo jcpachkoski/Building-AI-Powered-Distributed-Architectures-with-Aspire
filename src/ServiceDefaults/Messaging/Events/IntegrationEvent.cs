@@ -3,6 +3,7 @@ public record IntegrationEvent
 {
     public Guid EventId => Guid.NewGuid();
     public DateTime OccurredOn => DateTime.Now;
-    public string EventType => GetType().AssemblyQualifiedName;
+    public string EventType => GetType().AssemblyQualifiedName
+        ?? throw new InvalidOperationException("The event type does not have an assembly-qualified name.");
 }
 
